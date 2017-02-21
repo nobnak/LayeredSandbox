@@ -1,13 +1,14 @@
-﻿Shader "Unlit/ColorSpot" {
-	Properties {
+﻿Shader "Unlit/HightBasedColoring" {
+	Properties 	{
 		_MainTex ("Texture", 2D) = "white" {}
-        _Color ("Color", Color) = (1,1,1,1)
+        _DistTex ("Distribution", 2D) = "black" {}
+        _DistScale ("Dist Scale", Float) = 1
 	}
-	SubShader {
-		Tags { "RenderType"="Transparent" "Queue"="Transparent" }
-        Blend SrcAlpha OneMinusSrcAlpha
+	SubShader 	{
+		Tags { "RenderType"="Opaque" }
+		LOD 100
 
-		Pass {
+		Pass 		{
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
@@ -26,7 +27,9 @@
 
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-            float4 _Color;
+
+            sampler2D _DistTex;
+            float _DistScale;
 			
 			v2f vert (appdata v) {
 				v2f o;
@@ -36,8 +39,9 @@
 			}
 			
 			float4 frag (v2f i) : SV_Target {
-				float4 c = tex2D(_MainTex, i.uv);
-				return c * _Color;
+				float c = tex2D(_MainTex, i.uv).r;
+				float dc = fwidth(c);
+                return tex2D(_DistTex, float2(_DistScale * dc, c));
 			}
 			ENDCG
 		}

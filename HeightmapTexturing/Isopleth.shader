@@ -1,8 +1,10 @@
-﻿Shader "Unlit/Distribution" {
+﻿Shader "Unlit/Isopleth" {
 	Properties 	{
 		_MainTex ("Texture", 2D) = "white" {}
-        _DistTex ("Distribution", 2D) = "black" {}
-        _DistScale ("Dist Scale", Float) = 1
+
+        _Modulo ("Modulo", Range(0, 1)) = 0.5
+        _ContourWidth ("Contour Width", Float) = 1.5
+        _ContourColor ("Contour Color", Color) = (1,1,1,1)
 	}
 	SubShader 	{
 		Tags { "RenderType"="Opaque" }
@@ -28,8 +30,9 @@
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
 
-            sampler2D _DistTex;
-            float _DistScale;
+            float _Modulo;
+            float _ContourWidth;
+            float4 _ContourColor;
 			
 			v2f vert (appdata v) {
 				v2f o;
@@ -37,11 +40,16 @@
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				return o;
 			}
+
+            float contour(float v) {
+                float m = saturate(fmod(v, _Modulo) / _Modulo);
+                return saturate(smoothstep(0, _ContourWidth * fwidth(m), m));
+            }
 			
 			float4 frag (v2f i) : SV_Target {
 				float c = tex2D(_MainTex, i.uv).r;
-				float dc = fwidth(c);
-                return tex2D(_DistTex, float2(_DistScale * dc, c));
+				float m = contour(c);
+                return lerp(_ContourColor, c, m);
 			}
 			ENDCG
 		}
