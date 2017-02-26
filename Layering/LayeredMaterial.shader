@@ -1,4 +1,4 @@
-﻿Shader "Unlit/Layered" {
+﻿Shader "Layered/LayeredMaterial" {
 	Properties {
 		_MainTex ("Texture", 2D) = "black" {}
         _BlendTex ("Blend", 2D) = "black" {}
@@ -49,11 +49,6 @@
                 float4x4 cmat = float4x4(tex2D(_Tex1, i.uv), tex2D(_Tex2, i.uv), tex2D(_Tex3, i.uv), c);
 
                 return mul(float4(b.rgb,1.0-bsum), cmat);
-
-                c = lerp(c, tex2D(_Tex1, i.uv), b.r);
-                c = lerp(c, tex2D(_Tex2, i.uv), b.g);
-                c = lerp(c, tex2D(_Tex3, i.uv), b.b);
-                return c;
 			}
 			ENDCG
 		}
