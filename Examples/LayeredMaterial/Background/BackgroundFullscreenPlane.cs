@@ -15,6 +15,7 @@ namespace PointRegistrationSubmod {
     		var scale = targetCam.ViewportToWorldPoint (new Vector3 (1f, 1f, depth))
     			- targetCam.ViewportToWorldPoint (new Vector3 (0f, 0f, depth));
     		scale = targetCam.transform.InverseTransformDirection (scale);
+            scale.z = 1f;
 
             transform.position = targetCam.ViewportToWorldPoint (new Vector3 (0.5f, 0.5f, depth));
             transform.rotation = targetCam.transform.rotation;

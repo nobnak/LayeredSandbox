@@ -14,7 +14,7 @@ namespace PointRegistrationSubmod {
         RenderTexture maskTex;
 
     	void Update () {
-            FitCamera ();
+            //FitCamera ();
 
             CheckInitMaskTex();
 
