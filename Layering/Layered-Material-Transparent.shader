@@ -1,4 +1,4 @@
-﻿Shader "Layered/LayeredMaterial" {
+﻿Shader "Layered/Material/Transparent" {
 	Properties {
 		_MainTex ("Texture", 2D) = "black" {}
         _BlendTex ("Blend", 2D) = "black" {}
@@ -8,9 +8,12 @@
         _Tex3 ("Layer 3", 2D) = "black" {}
 	}
 	SubShader {
-		Tags { "RenderType"="Opaque" }
+		Tags { "RenderType"="Transparent" "Queue"="Transparent" }
 
 		Pass {
+            //Blend SrcAlpha OneMinusSrcAlpha
+            Blend One OneMinusSrcAlpha
+
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
