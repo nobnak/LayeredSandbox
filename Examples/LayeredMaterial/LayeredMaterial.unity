@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -91,7 +91,7 @@ NavMeshSettings:
     cellSize: 0.16666667
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
---- !u!43 &237100893
+--- !u!43 &166065981
 Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -219,6 +219,28 @@ Mesh:
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
   m_MeshOptimized: 0
+--- !u!84 &238780512
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_Width: 368
+  m_Height: 197
+  m_AntiAliasing: 1
+  m_DepthFormat: 2
+  m_ColorFormat: 0
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_TextureSettings:
+    m_FilterMode: 1
+    m_Aniso: 0
+    m_MipBias: 0
+    m_WrapMode: 1
 --- !u!1 &245683529
 GameObject:
   m_ObjectHideFlags: 0
@@ -280,7 +302,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 2141059489}
+  m_TargetTexture: {fileID: 238780512}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
@@ -303,17 +325,18 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 289771823}
-        m_MethodName: 53657454657874757265
+        m_MethodName: SetTexture
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 556e697479456e67696e652e4f626a6563742c20556e697479456e67696e65
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: 506f696e74526567697374726174696f6e5375626d6f642e546578747572654576656e742c20417373656d626c792d4353686172702c2056657273696f6e3d302e302e302e302c2043756c747572653d6e65757472616c2c205075626c69634b6579546f6b656e3d6e756c6c
+    m_TypeName: PointRegistrationSubmod.BasePlane+TextureEvent, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
   data:
     masterSize: 4
     spots:
@@ -499,7 +522,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 289771819}
-  m_Mesh: {fileID: 1886548031}
+  m_Mesh: {fileID: 1890927442}
 --- !u!4 &289771822
 Transform:
   m_ObjectHideFlags: 0
@@ -507,8 +530,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 289771819}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.2999878}
-  m_LocalScale: {x: 19.153439, y: 10, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 777.0669}
+  m_LocalScale: {x: 18.705584, y: 10, z: 0}
   m_Children: []
   m_Father: {fileID: 1146788071}
   m_RootOrder: 0
@@ -524,9 +547,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f65bd934097ec3c46b087b4a136fd36c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textureName: 5f426c656e64546578
+  textureName: _BlendTex
   planeMat: {fileID: 2100000, guid: f481dfc20e8029547802cbbb1838127f, type: 2}
-  normalizedDepth: 0
+  normalizedDepth: 0.777
   targetCam: {fileID: 1146788070}
 --- !u!1 &1146788066
 GameObject:
@@ -707,7 +730,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1324700875}
-  m_Mesh: {fileID: 237100893}
+  m_Mesh: {fileID: 166065981}
 --- !u!1 &1633243209
 GameObject:
   m_ObjectHideFlags: 0
@@ -844,7 +867,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1850260928}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!43 &1886548031
+--- !u!43 &1890927442
 Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -1002,25 +1025,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!84 &2141059489
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_Width: 362
-  m_Height: 189
-  m_AntiAliasing: 1
-  m_DepthFormat: 2
-  m_ColorFormat: 0
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_TextureSettings:
-    m_FilterMode: 1
-    m_Aniso: 0
-    m_MipBias: 0
-    m_WrapMode: 1
