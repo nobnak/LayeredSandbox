@@ -14,6 +14,8 @@ namespace PointRegistrationSubmod {
         RenderTexture maskTex;
 
     	void Update () {
+            FitCamera ();
+
             CheckInitMaskTex();
 
             if (data.points.Registered != null) {
@@ -62,6 +64,11 @@ namespace PointRegistrationSubmod {
                 data.maskCam.targetTexture = maskTex;
                 OnUpdateMaskTexture.Invoke (maskTex);
             }
+        }
+
+        void FitCamera () {
+            data.maskCam.orthographic = data.referenceCam.orthographic;
+            data.maskCam.orthographicSize = data.referenceCam.orthographicSize;
         }
 
         void ReleaseMaskTex () {
