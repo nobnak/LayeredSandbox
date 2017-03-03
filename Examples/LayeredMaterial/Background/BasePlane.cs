@@ -36,5 +36,8 @@ namespace PointRegistrationSubmod {
         public virtual void SetTexture(string textureName, Texture tex) {
             planeMat.SetTexture (textureName, tex);
         }
+
+        [System.Serializable]
+        public class TextureEvent : UnityEngine.Events.UnityEvent<Texture> {}
     }
 }
