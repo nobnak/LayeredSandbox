@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 namespace PointRegistrationSubmod {
 
     [ExecuteInEditMode]
     public class LandmarkController : MonoBehaviour {
         public const float TWO_PI = 2f * Mathf.PI;
 
-        public PointRegistrationSubmod.BasePlane.TextureEvent OnUpdateMaskTexture;
+        public TextureEvent OnUpdateMaskTexture;
         public Data data;
 
         RenderTexture maskTex;
