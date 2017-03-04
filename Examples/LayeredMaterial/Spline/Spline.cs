@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Spline {
     public const int SUBDIVISION = 10;
-    public const float CONTROL_RADIUS = 0.2f;
+    public const float CONTROL_RADIUS = 0.1f;
     public static readonly Color COLOR_POINT = (Color)new Color32 (226, 0, 255, 255);
     public static readonly Color COLOR_LINE = (Color)new Color32 (126, 255, 0, 255);
 
