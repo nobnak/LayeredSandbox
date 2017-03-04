@@ -72,6 +72,7 @@ namespace PointRegistrationSubmod {
         }
 
         void ReleaseMaskTex () {
+            data.maskCam.targetTexture = null;
             Release (maskTex);
         }
 
