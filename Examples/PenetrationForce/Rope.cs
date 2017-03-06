@@ -11,7 +11,8 @@ namespace PointRegistrationSubmod {
         public Transform p0;
         public Transform p1;
 
-        public float restoringForce = 1f;
+        public float restPositioningForce = 1f;
+        public float restLengthingForce = 1f;
         public float collidingDistance = 1f;
         public int numberOfIntermediatePoints = 10;
 
@@ -63,7 +64,7 @@ namespace PointRegistrationSubmod {
             restLength = Vector2.Distance (points [0].pos, points [points.Length - 1].pos) / numberOfLines;
             for (var i = 0; i < points.Length; i++) {
                 var p = points [i];
-                points [i] = new Point (p.mobility, Vector2.Lerp (p.pos, RestPosition (dt * i), dt * restoringForce));
+                points [i] = new Point (p.mobility, Vector2.Lerp (p.pos, RestPosition (dt * i), dt * restPositioningForce));
             }
             for (var i = 0; i < colliders.Length; i++)
                 colliderPositions [i] = PositionOnViewplane (colliders [i].position);
@@ -79,7 +80,7 @@ namespace PointRegistrationSubmod {
                 if (totalMobility > 0f) {
                     var p0To1 = p1.pos - p0.pos;
                     var len = p0To1.magnitude;
-                    var dx = (dt * restoringForce * (len - restLength) / totalMobility) * p0To1.normalized;
+                    var dx = (dt * restLengthingForce * (len - restLength) / totalMobility) * p0To1.normalized;
                     points [i] = new Point (p0.mobility, p0.pos + p0.mobility * dx);
                     points [i + 1] = new Point (p1.mobility, p1.pos - p1.mobility * dx);
                 }
