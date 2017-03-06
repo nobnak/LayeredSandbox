@@ -31,11 +31,35 @@ namespace PointRegistrationSubmod {
                 ropeSpline.DrawGizmos (viewPointCam, 10f);
         }
         void Update() {
-            CheckInit();
+            Allocate();
+            Precompute ();
+            PenalizeLineStretch ();
+            ConstrainCollision ();
+            UpdateSpline ();
+        }
+        #endregion
 
+        bool Prepared() {
+            return viewPointCam != null && ropeSpline != null && ropeSpline.valid;
+        }
+        void Allocate () {
+            if (points == null || points.Length != (numberOfIntermediatePoints + 2)) {
+                System.Array.Resize (ref points, numberOfIntermediatePoints + 2);
+                System.Array.Resize (ref splineControlPositions, points.Length + 2);
+                var first = points [0] = new Point (0f, PositionOnViewplane (p0.position));
+                var last = points [points.Length - 1] = new Point (first.mobility, PositionOnViewplane (p1.position));
+                var numOfLines = points.Length - 1;
+                var dt = 1f / numOfLines;
+                for (var i = 1; i < numOfLines; i++)
+                    points [i] = new Point (1f, RestPosition (dt * i));
+            }
+            if (colliderPositions == null || colliderPositions.Length != colliders.Length)
+                System.Array.Resize (ref colliderPositions, colliders.Length);
+        }
+
+        void Precompute () {
             var numberOfLines = points.Length - 1;
             var dt = 1f / numberOfLines;
-            var dTime = Time.deltaTime;
             restLength = Vector2.Distance (points [0].pos, points [points.Length - 1].pos) / numberOfLines;
             for (var i = 0; i < points.Length; i++) {
                 var p = points [i];
@@ -43,7 +67,11 @@ namespace PointRegistrationSubmod {
             }
             for (var i = 0; i < colliders.Length; i++)
                 colliderPositions [i] = PositionOnViewplane (colliders [i].position);
+        }
 
+        void PenalizeLineStretch () {
+            var numberOfLines = points.Length - 1;
+            var dt = 1f / numberOfLines;
             for (var i = 0; i < numberOfLines; i++) {
                 var p0 = points [i];
                 var p1 = points [i + 1];
@@ -52,39 +80,23 @@ namespace PointRegistrationSubmod {
                     var p0To1 = p1.pos - p0.pos;
                     var len = p0To1.magnitude;
                     var dx = (dt * restoringForce * (len - restLength) / totalMobility) * p0To1.normalized;
-                    points[i] = new Point (p0.mobility, p0.pos + p0.mobility * dx);
-                    points[i+1] = new Point (p1.mobility, p1.pos - p1.mobility * dx);
+                    points [i] = new Point (p0.mobility, p0.pos + p0.mobility * dx);
+                    points [i + 1] = new Point (p1.mobility, p1.pos - p1.mobility * dx);
                 }
             }
-            
+        }
+
+        void ConstrainCollision () {
+            var numberOfLines = points.Length - 1;
             for (var i = 0; i < numberOfLines; i++) {
                 var p0 = points [i];
                 var p1 = points [i + 1];
                 var line = new Line (p0, p1);
                 for (var j = 0; j < colliders.Length; j++)
-                    SolveCollision (ref points[i], ref points[i+1], line, j);
+                    SolveCollision (ref points [i], ref points [i + 1], line, j);
             }
+        }
 
-            UpdateSpline ();
-        }
-        #endregion
-
-        bool Prepared() {
-            return viewPointCam != null && ropeSpline != null && ropeSpline.valid;
-        }
-        void CheckInit () {
-            if (points == null || points.Length != (numberOfIntermediatePoints + 2)) {
-                System.Array.Resize (ref points, numberOfIntermediatePoints + 2);
-                System.Array.Resize (ref splineControlPositions, points.Length + 2);
-                var first = points [0] = new Point (0f, PositionOnViewplane (p0.position));
-                var last = points [points.Length - 1] = new Point (first.mobility, PositionOnViewplane (p1.position));
-                var numOfLines = points.Length - 1;
-                for (var i = 1; i < numOfLines; i++)
-                    points [i] = new Point (1f, Vector2.Lerp (first.pos, last.pos, (float)i / numOfLines));
-            }
-            if (colliderPositions == null || colliderPositions.Length != colliders.Length)
-                System.Array.Resize (ref colliderPositions, colliders.Length);
-        }
         void SolveCollision (ref Point p0, ref Point p1, Line line, int j) {
             var q = PositionOnViewplane (colliderPositions [j]);
             var p = line.ClosestPointOnLine (q);
