@@ -26,9 +26,12 @@ namespace PointRegistrationSubmod {
             }
 
             if (data.spots.Length >= 2) {
-                var p0 = (Vector2)data.spots [0].view.localPosition;
-                var p1 = (Vector2)data.spots [1].view.localPosition;
-                UpdateSpline(p0, p1);
+                var s0 = data.spots [0];
+                var s1 = data.spots [1];
+                var p0 = (Vector2)s0.view.localPosition;
+                var p1 = (Vector2)s1.view.localPosition;
+                var activity = s0.view.gameObject.activeInHierarchy & s1.view.gameObject.activeInHierarchy;
+                UpdateSpline (p0, p1, activity);
             }
     	}
         void OnDestroy() {
@@ -91,7 +94,7 @@ namespace PointRegistrationSubmod {
             }
         }
 
-        void UpdateSpline (Vector2 p0, Vector2 p1) {
+        void UpdateSpline (Vector2 p0, Vector2 p1, bool activity) {
             var controls = data.river.data.controls;
             if (controls == null || controls.Length < 4)
                 controls = new Vector2[4];
@@ -101,6 +104,7 @@ namespace PointRegistrationSubmod {
             controls [2] = p1;
             controls [3] = p1 + bending;
             data.river.data.controls = controls;
+            data.river.gameObject.SetActive (activity);
         }
 
         [System.Serializable]
