@@ -20,6 +20,8 @@ namespace PointRegistrationSubmod {
         Vector2[] splineControlPositions;
         Vector2[] colliderPositions;
 
+        float restLength;
+
         #region Unity
         void OnEnable() {
             ropeSpline = new Spline ();
@@ -34,12 +36,27 @@ namespace PointRegistrationSubmod {
             var numberOfLines = points.Length - 1;
             var dt = 1f / numberOfLines;
             var dTime = Time.deltaTime;
+            restLength = Vector2.Distance (points [0].pos, points [points.Length - 1].pos) / numberOfLines;
             for (var i = 0; i < points.Length; i++) {
                 var p = points [i];
                 points [i] = new Point (p.mobility, Vector2.Lerp (p.pos, RestPosition (dt * i), dt * restoringForce));
             }
             for (var i = 0; i < colliders.Length; i++)
                 colliderPositions [i] = PositionOnViewplane (colliders [i].position);
+
+            for (var i = 0; i < numberOfLines; i++) {
+                var p0 = points [i];
+                var p1 = points [i + 1];
+                var totalMobility = p0.mobility + p1.mobility;
+                if (totalMobility > 0f) {
+                    var p0To1 = p1.pos - p0.pos;
+                    var len = p0To1.magnitude;
+                    var dx = (dt * restoringForce * (len - restLength) / totalMobility) * p0To1.normalized;
+                    points[i] = new Point (p0.mobility, p0.pos + p0.mobility * dx);
+                    points[i+1] = new Point (p1.mobility, p1.pos - p1.mobility * dx);
+                }
+            }
+            
             for (var i = 0; i < numberOfLines; i++) {
                 var p0 = points [i];
                 var p1 = points [i + 1];
