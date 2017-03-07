@@ -48,7 +48,7 @@ namespace PointRegistrationSubmod {
                 System.Array.Resize (ref points, numberOfIntermediatePoints + 2);
                 System.Array.Resize (ref splineControlPositions, points.Length + 2);
                 var first = points [0] = new Point (0f, PositionOnViewplane (p0.position));
-                var last = points [points.Length - 1] = new Point (first.mobility, PositionOnViewplane (p1.position));
+                points [points.Length - 1] = new Point (first.mobility, PositionOnViewplane (p1.position));
                 var numOfLines = points.Length - 1;
                 var dt = 1f / numOfLines;
                 for (var i = 1; i < numOfLines; i++)
