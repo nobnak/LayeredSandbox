@@ -5,7 +5,7 @@ using System.IO;
 
 namespace LayeredSandbox {
     public class ImageLoader : System.IDisposable {
-        public const float DEFAULT_INTERVAL = 3f;
+        public const float DEFAULT_INTERVAL = 1f;
 
         public Texture2D ImageTex { get; private set; }
 
@@ -31,7 +31,6 @@ namespace LayeredSandbox {
             var tnow = Time.timeSinceLevelLoad;
             var dt = tnow - lastUpdateTime;
             if (dt > updateInterval) {
-                Debug.LogFormat ("Total seconds {0}", dt);
                 lastUpdateTime = tnow;
                 UpdateImageTex (folder, filename);
             }
@@ -50,14 +49,13 @@ namespace LayeredSandbox {
 
                 var writeTime = File.GetLastWriteTime (path);
                 if (writeTime != lastFiletime || path != lastPath) {
-                    Debug.Log("Reload tex from image file");
                     lastFiletime = writeTime;
                     lastPath = path;
 
                     if (ImageTex == null) {
-                        ImageTex = new Texture2D(2, 2, TextureFormat.ARGB32, false, true);
+                        ImageTex = new Texture2D(2, 2, TextureFormat.ARGB32, true);
                         ImageTex.filterMode = FilterMode.Bilinear;
-                        ImageTex.wrapMode = TextureWrapMode.Clamp;
+                        ImageTex.wrapMode = TextureWrapMode.Repeat;
                         ImageTex.anisoLevel = 0;
                     }
                     ImageTex.LoadImage(File.ReadAllBytes(path));
