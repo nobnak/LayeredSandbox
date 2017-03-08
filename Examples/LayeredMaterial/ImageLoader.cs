@@ -4,19 +4,21 @@ using UnityEngine;
 using System.IO;
 
 namespace LayeredSandbox {
-    public abstract class ImageLoader : System.IDisposable {
-        public Material filterMat;
+    public class ImageLoader : System.IDisposable {
+        public const float DEFAULT_INTERVAL = 3f;
 
         public Texture2D ImageTex { get; private set; }
 
-        readonly float updateInterval = 0.5f;
+        readonly float updateInterval;
 
         string lastPath;
-        System.DateTime lastUpdateTime;
+        float lastUpdateTime;
+        System.DateTime lastFiletime;
 
-        public ImageLoader(float updateInterval = 0.5f) {
+        public ImageLoader(float updateInterval = DEFAULT_INTERVAL) {
             this.updateInterval = updateInterval;
-            lastUpdateTime = System.DateTime.MinValue;
+            lastUpdateTime = float.MinValue;
+            lastFiletime = System.DateTime.MinValue;
         }
 
         #region IDisposable implementation
@@ -26,10 +28,11 @@ namespace LayeredSandbox {
         #endregion
 
         public void Update(System.Environment.SpecialFolder folder, string filename) {
-            var now = System.DateTime.Now;
-            var d = now - lastUpdateTime;
-            if (d.TotalSeconds > updateInterval) {
-                lastUpdateTime = now;
+            var tnow = Time.timeSinceLevelLoad;
+            var dt = tnow - lastUpdateTime;
+            if (dt > updateInterval) {
+                Debug.LogFormat ("Total seconds {0}", dt);
+                lastUpdateTime = tnow;
                 UpdateImageTex (folder, filename);
             }
         }
@@ -39,15 +42,16 @@ namespace LayeredSandbox {
         }
         protected virtual void UpdateImageTex(System.Environment.SpecialFolder folder, string filename) {
             try {
-                var path = GetPath ();
+                var path = GetPath (folder, filename);
                 if (!File.Exists (path)) {
                     ReleaseImageTex();
                     return;
                 }
 
                 var writeTime = File.GetLastWriteTime (path);
-                if (writeTime != lastUpdateTime || path != lastPath) {
-                    lastUpdateTime = writeTime;
+                if (writeTime != lastFiletime || path != lastPath) {
+                    Debug.Log("Reload tex from image file");
+                    lastFiletime = writeTime;
                     lastPath = path;
 
                     if (ImageTex == null) {
