@@ -6,16 +6,14 @@ namespace PointRegistrationSubmod {
 
     [ExecuteInEditMode]
     public class LandmarkController : MonoBehaviour {
-        public const float TWO_PI = 2f * Mathf.PI;
 
         public PointRegistrationSubmod.BasePlane.TextureEvent OnUpdateMaskTexture;
         public Data data;
 
         RenderTexture maskTex;
 
+        #region Unity
     	void Update () {
-            //FitCamera ();
-
             CheckInitMaskTex();
 
             if (data.points.Registered != null) {
@@ -37,17 +35,13 @@ namespace PointRegistrationSubmod {
         void OnDestroy() {
             ReleaseMaskTex ();
         }
+        #endregion
 
         public Vector3 NormalizedToLocalPosition(Vector3 normalizedPosition) {
             var p = data.maskCam.ViewportToWorldPoint (normalizedPosition);
             return data.maskCam.transform.InverseTransformPoint (p);
         }
 
-        public static Vector2 Rotate(Vector2 v, float angle, float scale = 1f) {
-            var c = Mathf.Cos (angle);
-            var s = Mathf.Sin (angle);
-            return new Vector2 (scale * (c * v.x - s * v.y), scale * (s * v.x + c * v.y));
-        }
         public static void Release(Object o) {
             if (Application.isPlaying)
                 Destroy (o);
@@ -68,17 +62,10 @@ namespace PointRegistrationSubmod {
                 OnUpdateMaskTexture.Invoke (maskTex);
             }
         }
-
-        void FitCamera () {
-            data.maskCam.orthographic = data.referenceCam.orthographic;
-            data.maskCam.orthographicSize = data.referenceCam.orthographicSize;
-        }
-
         void ReleaseMaskTex () {
             data.maskCam.targetTexture = null;
             Release (maskTex);
         }
-
         void UpdateSpot (List<Point> points, int ts) {
             var s = data.spots [ts];
             var tp = points.FindIndex (p => p.type == ts);
@@ -93,17 +80,8 @@ namespace PointRegistrationSubmod {
                 s.view.localScale = data.masterSize * s.size * Vector3.one;
             }
         }
-
         void UpdateSpline (Vector2 p0, Vector2 p1, bool activity) {
-            var controls = data.river.data.controls;
-            if (controls == null || controls.Length < 4)
-                controls = new Vector2[4];
-            var bending = Rotate (p1 - p0, TWO_PI * data.riverBending.x, data.riverBending.y);
-            controls [0] = p0 - bending;
-            controls [1] = p0;
-            controls [2] = p1;
-            controls [3] = p1 + bending;
-            data.river.data.controls = controls;
+            data.river.SetEndPoints (p0, p1);
             data.river.gameObject.SetActive (activity);
         }
 
@@ -112,7 +90,7 @@ namespace PointRegistrationSubmod {
             public float masterSize = 1f;
             public Spot[] spots;
 
-            public SplineVisualizer river;
+            public SimpleBentSplineVisualizer river;
             public Vector2 riverBending;
 
             public int maskLOD = 1;
