@@ -4,16 +4,15 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 public class SplineVisualizer : MonoBehaviour {
-    public Link link;
     public Data data;
 
     Spline spline;
     SplineMesh spmesh;
 
+    #region Unity
     void OnEnable() {
         spline = new Spline();
         spmesh = new SplineMesh ();
-        link.mf.sharedMesh = spmesh.mesh;
     }
     void Update() {
         spline.Reset (data.controls);
@@ -22,17 +21,7 @@ public class SplineVisualizer : MonoBehaviour {
     void OnDisable() {
         spmesh.Dispose ();
     }
-
-    void OnDrawGizmos() {
-        if (spline.valid && link.cam != null)
-            spline.DrawGizmos (link.cam, data.depth);
-    }
-
-    [System.Serializable]
-    public class Link {
-        public Camera cam;
-        public MeshFilter mf;
-    }
+    #endregion
 
     [System.Serializable]
     public class Data {
