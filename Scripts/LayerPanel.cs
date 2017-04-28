@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Gist;
 
-namespace PointRegistrationSubmod {
+namespace Gist {
         
     [ExecuteInEditMode]
-    public class BackgroundFullscreenPlane : MonoBehaviour {
+    public class LayerPanel : MonoBehaviour {
         public enum DepthModeEnum { Normalized = 0, Exact }
 
         public string defaultTextureName = "_MainTex";
