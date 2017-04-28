@@ -6,7 +6,7 @@ namespace PointRegistrationSubmod {
         
     [ExecuteInEditMode]
     public class BasePlane : MonoBehaviour {
-        public string textureName = "_MainTex";
+        public string defaultTextureName = "_MainTex";
     	public Material planeMat;
 
     	protected QuadMesh quad;
@@ -31,13 +31,10 @@ namespace PointRegistrationSubmod {
     	#endregion
 
         public virtual void SetTexture(Texture tex) {
-            planeMat.SetTexture (textureName, tex);
+            planeMat.SetTexture (defaultTextureName, tex);
         }
         public virtual void SetTexture(string textureName, Texture tex) {
             planeMat.SetTexture (textureName, tex);
         }
-
-        [System.Serializable]
-        public class TextureEvent : UnityEngine.Events.UnityEvent<Texture> {}
     }
 }
